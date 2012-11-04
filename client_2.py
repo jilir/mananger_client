@@ -20,11 +20,8 @@ curpath = os.path.dirname(__file__)
 mymid = -1
 mypid = -1
 totalmachines = 0
-
+skipto = -1
 syspf = platform.system()
-
-def operation(ss):
-	os.system(ss)
 
 
 def upload_log(url, filename):
@@ -48,16 +45,20 @@ def tar_logs():
 	if(syspf == 'Linux'):
 		pfpath = '/'
 	print '33'
+	if(skipto == -1):
+		name = str(mypid)+'_'+str(mymid)
+	else:
+		name = str(mypid)+'_'+str(mymid)+'_'+str(skipto)
 	
-	name = str(mypid)+'_'+str(mymid)
-	tar=tarfile.open('log_'+name+'.tar','w')
+	tarname = 'log_'+name+'.tar'
+	tar=tarfile.open(tarname,'w')
 	
 	for root,dir,files in os.walk(name+pfpath):
 		for file in files:
 			fullpath=os.path.join(root,file)
 			tar.add(fullpath)
 	tar.close()
-	return 'log_'+name+'.tar'
+	return tarname
 def get_count():
 	global peachdir
 	while(os.path.isfile('status.txt') != True):
@@ -101,6 +102,7 @@ def beat_th():
 	global mypid
 	global mymid
 	global totalmachines
+	global skipto
 	while(1):
 		back_uri = ''
 		if(mymid == -1 or mypid == -1):
@@ -113,10 +115,16 @@ def beat_th():
 				mypid = int(todo[1])
 				mymid = int(todo[2])
 				totalmachines = int(todo[3])
+				skipto = int(todo[4])
 				xml_name = get_xml(mypid)
-				dirname = str(mypid)+'_'+str(mymid)
+				if(skipto == -1):
+					dirname = str(mypid)+'_'+str(mymid)
+					ss = pythonpath+' '+peachpath+' -p '+str(totalmachines)+','+str(mymid)+' '+'xml.xml'
+				else:
+					dirname = str(mypid)+'_'+str(mymid)+'_'+str(skipto)
+					ss = pythonpath+' '+peachpath+' -p '+str(totalmachines)+','+str(mymid)+' --skipto '+str(skipto)+' '+'xml.xml'
 				os.mkdir(dirname)
-				print '1111111'+dirname
+				print dirname
 				t = tarfile.open(xml_name, 'r')
 				t.extractall(dirname)
 				t.close()
@@ -125,7 +133,7 @@ def beat_th():
 				fp.close()
 				#path!!!
 				os.chdir(dirname)
-				ss = pythonpath+' '+peachpath+' -p '+str(totalmachines)+','+str(mymid)+' '+'xml.xml'
+				#ss = pythonpath+' '+peachpath+' -p '+str(totalmachines)+','+str(mymid)+' '+'xml.xml'
 				#threading.Thread(target=os.system, args=(ss,)).start()
 				p = subprocess.Popen(ss,stdout= open('peach_run.log', 'w'))
 				

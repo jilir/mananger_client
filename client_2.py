@@ -166,7 +166,12 @@ def beat_th():
 				
 			else:
 				back_uri = 'status/?cid='+str(countnow)+'&mid='+str(mymid)+'&pid='+str(mypid)+'&tid='+str(totalcount)
-				http_back(back_host+back_uri)
+				ss = http_back(back_host+back_uri)
+				if(ss == 'stop'):
+					print 'error'
+
+					#kill peach and goto gettask fuck the path!!!
+					##need to add
 		time.sleep(5)
 
 '''

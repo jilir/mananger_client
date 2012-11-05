@@ -74,7 +74,7 @@ def get_count():
 			b = int(sp[1])
 			break;
 		except:
-			sleep(1)
+			time.sleep(1)
 		
 	return a, b
 

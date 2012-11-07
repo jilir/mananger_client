@@ -21,13 +21,13 @@ while(1):
 		rtn = http_back(back_host+'hi/')
 		if(rtn == 'hi'):
 			print 'server ok!'
-			break
 		else:
 			print 'new client'
 			fp = fopen('client_2.py', 'w')
 			fp.write(rtn)
 			fp.close()
 		os.system("client_2.py")
+		bread
 	except:
 		print 'Not Ready'
 		time.sleep(1)
